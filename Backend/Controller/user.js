@@ -24,7 +24,7 @@ const register=async (req,res)=>{
                 password:hash
             })
             .then(result=>{
-                res.json(result);
+                res.json("successfullly registered")
             })
             .catch(err=>{
                 console.log(err);
