@@ -13,7 +13,7 @@ const data=sequelize.define('user',{
         type:Sequelize.STRING,
         allowNull:false
     },
-    phone:Sequelize.NUMBER,
+    phone:Sequelize.STRING,
     password:{
         type:Sequelize.STRING,
         allowNull:false
