@@ -1,0 +1,12 @@
+.container{
+    display: flex;
+    background-color: black;
+    align-items: center;
+    justify-content: center;
+}
+
+footer{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
