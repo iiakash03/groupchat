@@ -34,6 +34,32 @@ const register=async (req,res)=>{
     }
 }
 
+const login=async (req,res)=>{
+    const email=req.body.email;
+    const password=req.body.password;
+
+    const user=await User.findAll({
+        where:{email:email}
+    })
+
+    if(user){
+        bcrypt.compare(password,data[0].password,(err,result)=>{
+            if(result){
+                return res.send({status:"logged",token:generateAccessToken(data[0].id,data[0].name)})
+            }else{
+                return res.send("password incorrect");
+            }
+        })
+    }else{
+        return res.send("user not found");
+    }
+}
+
+function generateAccessToken(id,name){
+    return jwt.sign({userId:id,name:name},'secretkey');
+}
+
 module.exports={
-    register
+    register,
+    login
 }
