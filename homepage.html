@@ -17,14 +17,30 @@
     </div>
     <div>
     <footer class="footer">
-        <form action="">
-            <input type="text">
+        <form onsubmit="messagesend()">
+            <input type="text" id="message">
             <input type="submit">
         </form>
 
     </footer>
     </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const token=localStorage.getItem('token')
+        function messagesend(e){
+            event.preventDefault();
+            const message=document.getElementById("message").value;
+            const token=localStorage.getItem('token');
+            const obj={
+                message,
+                token
+            }
+            axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
+            .then()
+
+        }
+    </script>
 
     
 </body>
