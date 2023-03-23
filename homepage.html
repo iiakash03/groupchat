@@ -43,11 +43,15 @@
         }
         window.addEventListener("DOMContentLoaded",()=>{
             const token=localStorage.getItem("token");
-            axios.get('http://localhost:3000/message/getmessage')
-            .then(result=>{
+            setInterval(()=>{
+                axios.get('http://localhost:3000/message/getmessage')
+                 .then(result=>{
                 console.log(result)
+                document.getElementById('main').innerText="";
                 showContentOnScreen(result.data)
             })
+            },1000)
+            
         })
 
         function showContentOnScreen(obj){
