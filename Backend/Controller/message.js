@@ -1,20 +1,28 @@
 const User=require('../Models/message')
 
 const savemessage=(req,res)=>{
-    const id=req.user.id;
+    const userId=req.user.id;
     const message=req.body.message
 
     obj={
-        id,
-        message
+        message,
+        userId
     }
 
     User.create({
-        id,
-        message
+        message,
+        userId
     })    
 }
 
+const getmessages=async (req,res)=>{
+    const message=await User.findAll({
+        attributes:['message']
+    })
+
+    res.send(message);
+}
+
 module.exports={
-    savemessage
+    savemessage,getmessages
 }

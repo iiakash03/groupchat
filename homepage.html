@@ -13,6 +13,7 @@
     </div>
     <div>
     <main class="main" id="main">
+
     </main>
     </div>
     <div>
@@ -39,6 +40,20 @@
             axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
             .then()
 
+        }
+        window.addEventListener("DOMContentLoaded",()=>{
+            const token=localStorage.getItem("token");
+            axios.get('http://localhost:3000/message/getmessage')
+            .then(result=>{
+                console.log(result)
+                showContentOnScreen(result.data)
+            })
+        })
+
+        function showContentOnScreen(obj){
+            for(let i=0;i<obj.length;i++){
+            document.getElementById('main').innerText+=obj[i].message;
+            }
         }
     </script>
 
