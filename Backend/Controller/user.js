@@ -38,7 +38,7 @@ const login=async (req,res)=>{
     const email=req.body.email;
     const password=req.body.password;
 
-    const user=await User.findAll({
+    const data=await User.findAll({
         where:{email:email}
     })
 
