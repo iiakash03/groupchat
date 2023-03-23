@@ -43,7 +43,7 @@
 
             axios.post('http://localhost:3000/user/login',obj)
             .then(response=>{
-                if(response.data.status==200){
+                if(response.data.status=='logged'){
                     localStorage.setItem('token',response.data.token);
                     document.getElementById("message").innerText=response.data.status;
                     window.location.href="../homepage.html";

@@ -1,5 +1,6 @@
 const User=require('../Models/user')
 const bcrypt=require('bcryptjs')
+const jwt=require('jsonwebtoken')
 
 
 const register=async (req,res)=>{
@@ -42,7 +43,7 @@ const login=async (req,res)=>{
         where:{email:email}
     })
 
-    if(user){
+    if(data){
         bcrypt.compare(password,data[0].password,(err,result)=>{
             if(result){
                 return res.send({status:"logged",token:generateAccessToken(data[0].id,data[0].name)})
