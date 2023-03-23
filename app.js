@@ -4,6 +4,9 @@ const Sequelize=require('./Backend/util/database');
 const bodyParser=require('body-parser')
 const cors=require('cors');
 
+const User=require('./Backend/Models/user');
+const Message=require('./Backend/Models/message');
+
 const userRoutes=require('./Backend/Routes/user')
 app.use(
     cors({
@@ -12,6 +15,9 @@ app.use(
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json());
 app.use('/user',userRoutes);
+
+User.hasMany(Message)
+Message.belongsTo(User)
 
 
 
