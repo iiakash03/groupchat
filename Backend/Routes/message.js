@@ -5,4 +5,6 @@ const authorization=require('../middleware/auth')
 
 router.post('/savemessage',authorization.authenticate,messageController.savemessage)
 
+router.get('/getmessage',messageController.getmessages)
+
 module.exports=router;
