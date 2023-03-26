@@ -6,9 +6,12 @@ const cors=require('cors');
 
 const User=require('./Backend/Models/user');
 const Message=require('./Backend/Models/message');
+const Group=require('./Backend/Models/group')
+const user_group=require('./Backend/Models/usergroup')
 
 const userRoutes=require('./Backend/Routes/user')
 const messageRoutes=require('./Backend/Routes/message')
+const groupRoutes=require('./Backend/Routes/group')
 
 app.use(
     cors({
@@ -24,9 +27,16 @@ app.use('/user',userRoutes);
 
 app.use('/message',messageRoutes)
 
+app.use('/group',groupRoutes)
+
 User.hasMany(Message)
 Message.belongsTo(User)
 
+Group.hasMany(Message)
+Message.belongsTo(Group)
+
+Group.belongsToMany(User,{through:user_group})
+User.belongsToMany(Group,{through:user_group})
 
 
 Sequelize

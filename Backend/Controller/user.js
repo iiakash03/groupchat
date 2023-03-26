@@ -56,11 +56,17 @@ const login=async (req,res)=>{
     }
 }
 
+const getUsers=async (req,res,next)=>{
+    const users=await User.findAll();
+    res.send(users)
+}
+
 function generateAccessToken(id,name){
     return jwt.sign({userId:id,name:name},'secretkey');
 }
 
 module.exports={
     register,
-    login
+    login,
+    getUsers
 }
