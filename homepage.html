@@ -68,15 +68,30 @@
             }
                 
             )
-            }
-
+        }
         
             function selectedGroup(id){
                 gid=id
-                console.log(gid)
+                localStorage.setItem('groupid',gid);
+
+                axios.post('http://localhost:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
+                .then(result=>{
+                    console.log(result.data[0].isAdmin)
+                    if(result.data[0].isAdmin===true){
+                        console.log('fdrtfr')
+                        let addbuttons=document.getElementById(gid)
+                        addbuttons.innerHTML+=`<button onclick=location.href='../editgroup.html'>Add/Remove User</button>`
+                        addbuttons.innerHTML+=`<button onclick=location.href='../admingroup.html'>Add/Remove Admin</button>`
+
+                    }
+                    
+
+                })
+
                 axios.get(`http://localhost:3000/message/getGroupMessage?groupid=${id}`)
                 .then(messages=>{
-                    document.getElementById('ul').value=''
+                    console.log(messages,"hghgvhjvkhbjhub")
+                    document.getElementById('ul').innerText=''
                     showMessageOnScreen(messages.data)
 
                 })
@@ -98,17 +113,8 @@
                     showContentOnScreen(groups.data)
                 })
 
-                axios.get('http://localhost:3000/message/getmessage')
-                 .then(result=>{
-                    console.log(result)
-                    for(let i=0;i<result.data.length;i++){
-                        arr[i]=result.data[i].message
-                    }
-                localStorage.setItem('message',arr)
-            })
-
                 document.getElementById('ul').innerText="";
-                showMessageOnScreen(localStorage.getItem('message'))
+                //showMessageOnScreen(localStorage.getItem('message'))
             
            // },100000000)
         
@@ -123,17 +129,18 @@
 
         }
 
-        function showMessageOnScreen(obj){
-            if(obj.length==0){
-                return
-            }else{
-            var array = obj.split(",");
-            for(let i=0;i<array.length;i++){
-                const childHtml=`<tr><td>${array[i]}</td></tr>`
-            document.getElementById('ul').innerHTML+=childHtml
-            }
-        }
-        }
+ function showMessageOnScreen(obj) {
+    console.log(obj)
+    const messages = Array.isArray(obj) ? obj : obj.split(",");
+    if (messages.length === 0) {
+        return;
+    }
+    console.log(messages)
+
+    const messageHtml = messages.map((message) =>`<tr><td>${message.message}</td></tr>`).join("");
+    document.getElementById("ul").innerHTML = messageHtml;
+  }
+
     </script>
 
     

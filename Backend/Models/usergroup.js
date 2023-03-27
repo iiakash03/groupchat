@@ -8,8 +8,8 @@ const user_group=sequelize.define('cartItem',{
     allowNull:false,
     primaryKey:true
   },
-  userId:Sequelize.INTEGER,
-  groupId:Sequelize.INTEGER
+
+  isAdmin:Sequelize.BOOLEAN
    
 })
 
