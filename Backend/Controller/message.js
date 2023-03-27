@@ -1,14 +1,28 @@
 const { where } = require('sequelize');
 const Message=require('../Models/message')
+const User=require('../Models/user')
+const Group=require('../Models/group')
 
-const savemessage=(req,res)=>{
-    const userid=req.body.id
+const savemessage=async (req,res)=>{
+    const userid=req.user.id
     const message=req.body.message
     const groupid=req.body.gid
 
-    console.log(userid)
-    console.log(message)
-    console.log(groupid)
+    const group=await Group.findByPk(groupid)
+
+    const user=await User.findByPk(req.user.id)
+    .then(user=>{
+        if(!user){
+
+        }else{
+            user.createMessage({
+                message:message
+            })
+            .then(data=>{
+                data.setGroup(group)
+            })
+        }
+    })
 }
 
 const getindex=async (req,res)=>{

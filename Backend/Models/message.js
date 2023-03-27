@@ -1,6 +1,6 @@
 const sequelize=require('../util/database');
 const Sequelize=require('sequelize');
-const message=sequelize.define('expense',{
+const message=sequelize.define('message',{
     id:{
         type:Sequelize.INTEGER,
         autoIncrement:true,
