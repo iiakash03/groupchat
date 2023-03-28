@@ -32,10 +32,12 @@ const updateGroup = async (req, res, next) => {
 const admin=async (req,res,next)=>{
     console.log('entefvvdfvdf')
    const admin= await user_group.findAll({
-        attributes:['isAdmin']
-    },
-    {
-        where:{userId:req.user.id,groupId:req.body.gid}
+    where: {
+        [Op.and]: [
+          { userId: req.user.id },
+          { groupId: req.body.gid}
+        ]
+      }
     }
     )
     res.send(admin)

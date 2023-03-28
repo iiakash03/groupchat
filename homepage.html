@@ -81,7 +81,7 @@
                 axios.post('http://localhost:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
                 .then(result=>{
                     console.log(result.data[0].isAdmin)
-                    if(result.data[0].isAdmin===true){
+                    if(result.data[0].isAdmin==true){
                         const groups=document.getElementsByClassName('group')
                         console.log(groups)
                         for(let i=0;i<groups.length;i++){
