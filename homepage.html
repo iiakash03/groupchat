@@ -7,14 +7,14 @@
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body style="background-color: cornflowerblue;">
     
     <div class="container">
     <header style="color: purple;" class="header" align="middle"><h1>CHAT APP</h1></header>
     </div>
     <button onclick="location.href='../addgroup.html'" id="fp">Create Group</button>
     <div align="middle" id="welmessage">
-        Welcome
+        <b>Welcome</b>
     </div>
     <div>
         <ul id="groups">
@@ -44,7 +44,15 @@
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
     <script>
+
+    var socket = io.connect("localhost:3000");
+      socket.on("connect",()=>{
+        showMessageOnScreen("hi logging in from server")
+        
+      })
         let gid=0
 
         const token=localStorage.getItem('token')
@@ -53,17 +61,14 @@
             event.preventDefault();
             const message=document.getElementById("message").value;
             document.getElementById("message").value="";
-            //const token=localStorage.getItem('token');
-            document.getElementById('')
+            const groupid=localStorage.getItem('groupid');
+            socket.emit('send-message',message,groupid)
+            showMessageOnScreen(message)
 
             const obj={
                 message,
                 token,
                 gid
-            }
-            const size=localStorage.getItem('message')
-            if(!size){
-                localStorage.setItem('message',message)
             }
 
             axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
@@ -73,10 +78,17 @@
                 
             )
         }
+
+        socket.on('recieve-message',(message,groupid)=>{
+                console.log("ervkrvkrnrntnt")
+                showMessageOnScreen(message)
+            })
         
             function selectedGroup(id){
                 gid=id
                 localStorage.setItem('groupid',gid);
+
+                socket.emit("join-room",gid)
 
                 axios.post('http://localhost:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
                 .then(result=>{
@@ -103,7 +115,11 @@
                 .then(messages=>{
                     console.log(messages,"hghgvhjvkhbjhub")
                     document.getElementById('ul').innerText=''
-                    showMessageOnScreen(messages.data)
+                    for(let i=0;i<messages.data.length;i++){
+                        showMessageOnScreen(messages.data[i].message)
+
+                    }
+                    
 
                 })
             }
@@ -127,7 +143,7 @@
                 console.log(nameofuser)
                 let arr=[];
                 document.getElementById('welmessage').innerText+=" "+nameofuser
-                obj={
+                const obj={
 
                 }
                 axios.post('http://localhost:3000/group/getgroup',obj,{headers:{Authorization:token}})
@@ -154,19 +170,14 @@
 
         }
 
- function showMessageOnScreen(obj) {
-    console.log(obj)
-    const messages = Array.isArray(obj) ? obj : obj.split(",");
-    if (messages.length === 0) {
-        return;
-    }
-    console.log(messages)
+ function showMessageOnScreen(message) {
 
-    const messageHtml = messages.map((message) =>`<tr><td>${message.message}</td></tr>`).join("");
-    document.getElementById("ul").innerHTML = messageHtml;
+   let messageHtml= `<tr style="background-color:red"><td>${message}</td></tr>`
+    document.getElementById("ul").innerHTML += messageHtml;
   }
 
     </script>
+   
     
 </body>
 </html>

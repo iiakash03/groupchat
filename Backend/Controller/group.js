@@ -3,9 +3,11 @@ const user_group = require('../Models/usergroup');
 const User=require('../Models/user')
 const { Op } = require('sequelize');
 const Usergroup=require('../Models/usergroup')
+const sequelize=require('../util/database');
 
 const updateGroup = async (req, res, next) => {
     try {
+    const t=await sequelize.transaction();
       const group = await Group.findByPk(req.body.groupid);
       group.groupname = req.body.gn;
       await group.save();
@@ -20,16 +22,20 @@ const updateGroup = async (req, res, next) => {
       });
   
       await group.setUsers(users);
+
+      t.commit();
   
       res.send("ok");
     } catch (err) {
-      next(err);
+        t.rollback()
+        console.log(err)
     }
   };
 
 
 
 const admin=async (req,res,next)=>{
+    try{
     console.log('entefvvdfvdf')
    const admin= await user_group.findAll({
     where: {
@@ -41,26 +47,37 @@ const admin=async (req,res,next)=>{
     }
     )
     res.send(admin)
+}catch(err){
+    res.send("some error occured")
+}
 }
 
 
 const getgroup=async (req,res,next)=>{
+    try{
     const group=await req.user.getGroups()
     res.send(group);
+    }catch(err){
+        res.send("so0me error occured")
+    }
 }
 
 
 const getgroupbyId=async (req,res,next)=>{
+    try{
     const group=await Group.findAll({
         where:{id:req.params.groupid}
     })
     console.log(group)
     res.send(group)
-
+}catch(err){
+    res.send(err)
+}
 }
 
 
 const saveGroup=async (req,res,next)=>{
+    try{
     const group=req.body;
 
     console.log(group)
@@ -96,6 +113,9 @@ const saveGroup=async (req,res,next)=>{
     )
 
     res.send("ok")
+}catch(err){
+    res.send("some error occured")
+}
     
 }
 

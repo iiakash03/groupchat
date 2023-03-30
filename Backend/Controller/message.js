@@ -4,6 +4,8 @@ const User=require('../Models/user')
 const Group=require('../Models/group')
 
 const savemessage=async (req,res)=>{
+    try{
+    const t=await sequelize.transaction();
     const userid=req.user.id
     const message=req.body.message
     const groupid=req.body.gid
@@ -20,9 +22,14 @@ const savemessage=async (req,res)=>{
             })
             .then(data=>{
                 data.setGroup(group)
+                t.commit()
             })
         }
     })
+}catch(err){
+    res.send("some error occured")
+
+    }
 }
 
 const getindex=async (req,res)=>{

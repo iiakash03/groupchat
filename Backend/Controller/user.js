@@ -1,9 +1,12 @@
 const User=require('../Models/user')
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
+const { Sequelize } = require('sequelize')
 
 
 const register=async (req,res)=>{
+    try{
+    const t=await Sequelize.transaction();
     const name=req.body.name;
     const email=req.body.email;
     const phone=req.body.phone;
@@ -33,9 +36,15 @@ const register=async (req,res)=>{
         })
 
     }
+    t.commit();
+}catch(err){
+    t.rollback();
+    res.send("some error occured")
+}
 }
 
 const login=async (req,res)=>{
+    try{
     const email=req.body.email;
     const password=req.body.password;
 
@@ -54,6 +63,9 @@ const login=async (req,res)=>{
     }else{
         return res.send("user not found");
     }
+}catch(err){
+    res.send(err)
+}
 }
 
 const getUsers=async (req,res,next)=>{
