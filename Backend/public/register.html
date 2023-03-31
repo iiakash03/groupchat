@@ -66,7 +66,7 @@
             password:document.getElementById('password').value
             }
 
-            axios.post('http://localhost:3000/user/register',obj)
+            axios.post('http://3.21.159.235:3000/user/register',obj)
             .then(response=>{
                 document.getElementById('message').innerText=response.data;
                 console.log(response);

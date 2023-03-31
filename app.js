@@ -56,6 +56,10 @@ app.use('/message',messageRoutes)
 
 app.use('/group',groupRoutes)
 
+app.use((req,res)=>{
+    res.sendFile(path.join(__dirname, `Backend/public/${req.url}`))
+})
+
 User.hasMany(Message)
 Message.belongsTo(User)
 
