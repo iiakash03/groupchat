@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form onsubmit="groupname()">
+        <label for="group"></label>
+        <input type="text" id="group">
+        <select multiple="multiple" id="users">
+            
+        </select><br />
+        
+        <input type="submit">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded',()=>{
+            axios.get('http://localhost:3000/user/getUsers')
+            .then(result=>{
+                showUsers(result.data)
+
+            })
+            const groupid=localStorage.getItem('groupid')
+            axios.get(`http://localhost:3000/group/getGroupbyId/${groupid}`)
+            .then(data=>{
+                console.log(data,'vgfgvfyvy')
+              document.getElementById('group').value=data.data[0].groupname
+            })
+        })
+
+        function showUsers(obj){
+            console.log(obj)
+            let inner=document.getElementById('users')
+            for(const user in obj){
+                console.log(obj[user])
+                inner.innerHTML+=`<option value=${obj[user].id}>${obj[user].name}</option>`
+
+            }
+
+        }
+
+        const token=localStorage.getItem('token')
+
+
+        function groupname(){
+            event.preventDefault();
+            console.log("jebjeb")
+            const gn=document.getElementById("group").value;
+            const users=document.getElementById('users').selectedOptions
+            const groupid=localStorage.getItem('groupid')
+            
+            let values=Array.from(users).map(({value})=>value)
+            //console.log(values)
+
+            axios.post('http://localhost:3000/group/updategroup',{gn,values,groupid},{headers:{Authorization:token}})
+            .then(res=>{
+                console.log(res,"gvhygy")
+                window.location.href="../homepage.html"
+            })
+        }
+    </script>
+
+    
+</body>
+</html>

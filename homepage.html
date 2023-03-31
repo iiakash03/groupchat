@@ -7,56 +7,177 @@
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body style="background-color: cornflowerblue;">
+    
     <div class="container">
     <header style="color: purple;" class="header" align="middle"><h1>CHAT APP</h1></header>
     </div>
+    <button onclick="location.href='../addgroup.html'" id="fp">Create Group</button>
+    <div align="middle" id="welmessage">
+        <b>Welcome</b>
+    </div>
     <div>
-    <main class="main" id="main">
+        <ul id="groups">
+            GROUPS 
 
-    </main>
+        </ul>
+    </div>
+    <div>
+        <table class="table" align="center">
+            <thead>
+                <tr>
+                    <th scope="col">Messages</th>
+                </tr>
+            </thead>
+            <tbody id="ul">
+            </tbody>
+        </table>
     </div>
     <div>
     <footer class="footer">
-        <form onsubmit="messagesend()">
+        <form onsubmit="messagesend()" id="messageform">
             <input type="text" id="message">
-            <input type="submit">
+            <input type="submit" value="Send">
         </form>
 
     </footer>
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
     <script>
+
+    var socket = io.connect("localhost:3000");
+      socket.on("connect",()=>{
+        showMessageOnScreen("hi logging in from server")
+        
+      })
+        let gid=0
+
         const token=localStorage.getItem('token')
         function messagesend(e){
+
             event.preventDefault();
             const message=document.getElementById("message").value;
-            const token=localStorage.getItem('token');
+            document.getElementById("message").value="";
+            const groupid=localStorage.getItem('groupid');
+            socket.emit('send-message',message,groupid)
+            showMessageOnScreen(message)
+
             const obj={
                 message,
-                token
+                token,
+                gid
             }
-            axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
-            .then()
 
+            axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
+            .then(result=>{
+                console.log("done")
+            }
+                
+            )
         }
+
+        socket.on('recieve-message',(message,groupid)=>{
+                console.log("ervkrvkrnrntnt")
+                showMessageOnScreen(message)
+            })
+        
+            function selectedGroup(id){
+                gid=id
+                localStorage.setItem('groupid',gid);
+
+                socket.emit("join-room",gid)
+
+                axios.post('http://localhost:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
+                .then(result=>{
+                    console.log(result.data[0].isAdmin)
+                    if(result.data[0].isAdmin==true){
+                        const groups=document.getElementsByClassName('group')
+                        console.log(groups)
+                        for(let i=0;i<groups.length;i++){
+                            //console.log(groups[i].id)
+                            if(id==groups[i].id){
+                                const getGroup=document.getElementById(`buttons${id}`)
+                                getGroup.innerHTML+=`<button id="add-user-btn${id}" onclick=location.href='../editgroup.html'>Add/Remove User</button>
+                                                    <button id="add-admin-btn${id}" onclick=location.href='../admingroup.html'>Add/Remove Admin</button>`
+                            }else{
+                                document.getElementById(`buttons${groups[i].id}`).innerHTML=''
+                            }
+                        }
+
+                }
+            });
+   
+
+                axios.get(`http://localhost:3000/message/getGroupMessage?groupid=${id}`)
+                .then(messages=>{
+                    console.log(messages,"hghgvhjvkhbjhub")
+                    document.getElementById('ul').innerText=''
+                    for(let i=0;i<messages.data.length;i++){
+                        showMessageOnScreen(messages.data[i].message)
+
+                    }
+                    
+
+                })
+            }
+
+            function parseJwt (token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
+
+
         window.addEventListener("DOMContentLoaded",()=>{
             const token=localStorage.getItem("token");
-            axios.get('http://localhost:3000/message/getmessage')
-            .then(result=>{
-                console.log(result)
-                showContentOnScreen(result.data)
-            })
+            //console.log(token)
+            //setInterval(()=>{
+                const nameofuser=parseJwt(token).name
+                console.log(nameofuser)
+                let arr=[];
+                document.getElementById('welmessage').innerText+=" "+nameofuser
+                const obj={
+
+                }
+                axios.post('http://localhost:3000/group/getgroup',obj,{headers:{Authorization:token}})
+                .then(groups=>{
+                    if(groups.data.length==0){
+                        const input=document.getElementById('messageform').style.visibility='hidden'
+                    }
+                    showContentOnScreen(groups.data)
+                })
+
+                document.getElementById('ul').innerText="";
+                //showMessageOnScreen(localStorage.getItem('message'))
+            
+           // },100000000)
+        
         })
 
         function showContentOnScreen(obj){
+            console.log(obj[0])
+            let groups=document.getElementById('groups')
             for(let i=0;i<obj.length;i++){
-            document.getElementById('main').innerText+=obj[i].message;
+                groups.innerHTML+=`<li><button id="${obj[i].id}" class="add-buttons group" onClick=selectedGroup('${obj[i].id}')><span id="buttons${obj[i].id}"></span>${obj[i].groupname}</button></li>`
             }
-        }
-    </script>
 
+        }
+
+ function showMessageOnScreen(message) {
+
+   let messageHtml= `<tr style="background-color:red"><td>${message}</td></tr>`
+    document.getElementById("ul").innerHTML += messageHtml;
+  }
+
+    </script>
+   
     
 </body>
 </html>
