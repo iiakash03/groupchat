@@ -41,7 +41,7 @@
                 password
             }
 
-            axios.post('http://localhost:3000/user/login',obj)
+            axios.post('http://3.21.159.235:3000/user/login',obj)
             .then(response=>{
                 if(response.data.status=='logged'){
                     localStorage.setItem('token',response.data.token);

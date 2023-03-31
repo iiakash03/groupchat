@@ -44,7 +44,7 @@
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="http://3.21.159.235:3000/socket.io/socket.io.js"></script>
 
     <script>
 
@@ -71,7 +71,7 @@
                 gid
             }
 
-            axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
+            axios.post('http://3.21.159.235:3000/message/savemessage',obj,{headers:{Authorization:token}})
             .then(result=>{
                 console.log("done")
             }
@@ -90,7 +90,7 @@
 
                 socket.emit("join-room",gid)
 
-                axios.post('http://localhost:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
+                axios.post('http://3.21.159.235:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
                 .then(result=>{
                     console.log(result.data[0].isAdmin)
                     if(result.data[0].isAdmin==true){
@@ -111,7 +111,7 @@
             });
    
 
-                axios.get(`http://localhost:3000/message/getGroupMessage?groupid=${id}`)
+                axios.get(`http://3.21.159.235:3000/message/getGroupMessage?groupid=${id}`)
                 .then(messages=>{
                     console.log(messages,"hghgvhjvkhbjhub")
                     document.getElementById('ul').innerText=''
@@ -146,7 +146,7 @@
                 const obj={
 
                 }
-                axios.post('http://localhost:3000/group/getgroup',obj,{headers:{Authorization:token}})
+                axios.post('http://3.21.159.235:3000/group/getgroup',obj,{headers:{Authorization:token}})
                 .then(groups=>{
                     if(groups.data.length==0){
                         const input=document.getElementById('messageform').style.visibility='hidden'
