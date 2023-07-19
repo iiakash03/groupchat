@@ -1,31 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<title>Login Page</title>
+	<link rel="stylesheet" type="text/css" href="loginstyle.css">
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="column">
-                <form onsubmit="login()">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="email"><br>
-                    <label class="form-label">password</label>
-                    <input type="password" id="password"><br>
-                    <input type="submit" id="button">
-                    
-                </form>
-                <button onclick="location.href='../frontend/forgotpassword.html'" id="fp">forgot password</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p id="error"></p>
-                <p id="message"> </p>
-            </div>
+	<div class="login-container">
+		<h1>Login</h1>
+		<form onsubmit="login()">
+			<label for="username">Username</label>
+			<input type="text" id="email" name="username" required>
+
+			<label for="password">Password</label>
+			<input type="password" id="password" name="password" required>
+
+			<button type="submit" class="btn" id="button">Log In</button>
+		</form>
+		<p>Don't have an account? <a href="register.html">Sign up</a></p>
+	</div>
+    <div class="row">
+        <div class="col">
+            <p id="error"></p>
+            <p id="message"> </p>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -41,15 +37,18 @@
                 password
             }
 
-            axios.post('http://3.21.159.235:3000/user/login',obj)
+            axios.post('http://localhost:3000/user/login',obj)
             .then(response=>{
                 if(response.data.status=='logged'){
                     localStorage.setItem('token',response.data.token);
                     document.getElementById("message").innerText=response.data.status;
-                    window.location.href="../homepage.html";
+                    console.log("akshkn")
+                    window.location.href="homepage.html";
+                }else{
+                    document.getElementById("message").innerText=response.data.status;
                 }
             })
         }
     </script>
-    </body>
-    </html>
+</body>
+</html>

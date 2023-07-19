@@ -12,7 +12,7 @@
     <div class="container">
     <header style="color: purple;" class="header" align="middle"><h1>CHAT APP</h1></header>
     </div>
-    <button onclick="location.href='../addgroup.html'" id="fp">Create Group</button>
+    <button onclick="location.href='addgroup.html'" id="fp">Create Group</button>
     <div align="middle" id="welmessage">
         <b>Welcome</b>
     </div>
@@ -37,6 +37,7 @@
     <footer class="footer">
         <form onsubmit="messagesend()" id="messageform">
             <input type="text" id="message">
+            <input type="file" id="file" name="file" accept="audio/*,video/*,image/*">
             <input type="submit" value="Send">
         </form>
 
@@ -44,7 +45,7 @@
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="http://3.21.159.235:3000/socket.io/socket.io.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 
     <script>
 
@@ -71,12 +72,13 @@
                 gid
             }
 
-            axios.post('http://3.21.159.235:3000/message/savemessage',obj,{headers:{Authorization:token}})
+            axios.post('http://localhost:3000/message/savemessage',obj,{headers:{Authorization:token}})
             .then(result=>{
                 console.log("done")
-            }
-                
-            )
+            })
+            .catch(err=>{
+                console.log(err)
+            })
         }
 
         socket.on('recieve-message',(message,groupid)=>{
@@ -90,7 +92,7 @@
 
                 socket.emit("join-room",gid)
 
-                axios.post('http://3.21.159.235:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
+                axios.post('http://localhost:3000/group/admincontrol',{gid},{headers:{Authorization:token}})
                 .then(result=>{
                     console.log(result.data[0].isAdmin)
                     if(result.data[0].isAdmin==true){
@@ -99,9 +101,10 @@
                         for(let i=0;i<groups.length;i++){
                             //console.log(groups[i].id)
                             if(id==groups[i].id){
+                                
                                 const getGroup=document.getElementById(`buttons${id}`)
-                                getGroup.innerHTML+=`<button id="add-user-btn${id}" onclick=location.href='../editgroup.html'>Add/Remove User</button>
-                                                    <button id="add-admin-btn${id}" onclick=location.href='../admingroup.html'>Add/Remove Admin</button>`
+                                getGroup.innerHTML+=`<button id="add-user-btn${id}" onclick=location.href='editgroup.html'>Add/Remove User</button>
+                                                    <button id="add-admin-btn${id}" onclick=location.href='admingroup.html'>Add/Remove Admin</button>`
                             }else{
                                 document.getElementById(`buttons${groups[i].id}`).innerHTML=''
                             }
@@ -111,13 +114,12 @@
             });
    
 
-                axios.get(`http://3.21.159.235:3000/message/getGroupMessage?groupid=${id}`)
+                axios.get(`http://localhost:3000/message/getGroupMessage?groupid=${id}`)
                 .then(messages=>{
                     console.log(messages,"hghgvhjvkhbjhub")
                     document.getElementById('ul').innerText=''
                     for(let i=0;i<messages.data.length;i++){
                         showMessageOnScreen(messages.data[i].message)
-
                     }
                     
 
@@ -146,7 +148,7 @@
                 const obj={
 
                 }
-                axios.post('http://3.21.159.235:3000/group/getgroup',obj,{headers:{Authorization:token}})
+                axios.post('http://localhost:3000/group/getgroup',obj,{headers:{Authorization:token}})
                 .then(groups=>{
                     if(groups.data.length==0){
                         const input=document.getElementById('messageform').style.visibility='hidden'

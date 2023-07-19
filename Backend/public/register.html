@@ -5,6 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+		form {
+			margin: 50px auto;
+			width: 400px;
+			padding: 20px;
+			border: 2px solid #ccc;
+			border-radius: 5px;
+			font-family: Arial, sans-serif;
+		}
+		input[type=text], input[type=email], input[type=password], input[type=number] {
+			display: block;
+			margin-bottom: 20px;
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			font-size: 16px;
+			font-family: Arial, sans-serif;
+		}
+		input[type=submit] {
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 3px;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			font-family: Arial, sans-serif;
+		}
+		input[type=submit]:hover {
+			background-color: #45a049;
+		}
+		label {
+			font-size: 16px;
+			font-family: Arial, sans-serif;
+			color: #333;
+			margin-bottom: 10px;
+			display: block;
+		}
+	</style>
 </head>
 <body>
     <nav style="background-color: black;">
@@ -29,28 +69,21 @@
                 <p id="message" style="color: red;"></p>
             </div>
         </div>
-        <div class="row" style="height: 100vh;">
-            <div class="col" style="display: flex; align-items: center; justify-content: center;background-color: bisque;" >
-                <form onsubmit="register()" >
-                    <div>
-                        <label class="form-label">Name</label><br>
-                        <input type="text" id="name"><br>
-                    </div>
-                    <div>
-                        <label class="form-label">Email</label><br>
-                        <input type="email" id="email"><br>
-                    </div>
-                    <div>
-                        <label class="form-label">phone</label><br>
-                        <input type="number" id="phone"><br>
-                    </div>
-                    <div>
-                        <label class="form-label">password</label><br>
-                        <input type="password" id="password"><br>
-                    </div>
-                    <input type="submit" id="button">
-                </form>
-            </div>
+        <form onsubmit="register()">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name">
+    
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email">
+
+            <label for="phone">Phone</label>
+            <input type="number" id="phone" name="phone" placeholder="Enter your phone">
+    
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+    
+            <input type="submit" value="Register">
+                <p>Already registered <a href="login.html">Sign in</a></p>
         </div>
         
     </div>
@@ -66,7 +99,7 @@
             password:document.getElementById('password').value
             }
 
-            axios.post('http://3.21.159.235:3000/user/register',obj)
+            axios.post('http://localhost:3000/user/register',obj)
             .then(response=>{
                 document.getElementById('message').innerText=response.data;
                 console.log(response);
