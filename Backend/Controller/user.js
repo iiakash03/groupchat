@@ -6,7 +6,7 @@ const Sequelize=require('../util/database');
 
 const register=async (req,res)=>{
     try{
-    const t=await Sequelize.transaction();
+   
     const name=req.body.name;
     const email=req.body.email;
     const phone=req.body.phone;
@@ -36,9 +36,9 @@ const register=async (req,res)=>{
         })
 
     }
-    t.commit();
 }catch(err){
-    t.rollback();
+    
+    console.log(err)
     res.send("some error occured")
 }
 }
