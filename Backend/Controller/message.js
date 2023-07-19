@@ -1,20 +1,19 @@
-const { where } = require('sequelize');
+const sequelize = require('sequelize');
 const Message=require('../Models/message')
 const User=require('../Models/user')
 const Group=require('../Models/group')
 
+
 const savemessage=async (req,res)=>{
     try{
-    const t=await sequelize.transaction();
     const userid=req.user.id
     const message=req.body.message
     const groupid=req.body.gid
 
     const group=await Group.findByPk(groupid)
 
-    const user=await User.findByPk(req.user.id)
-    .then(user=>{
-        if(!user){
+    const user=await User.findByPk(userid)
+    if(!user){
 
         }else{
             user.createMessage({
@@ -22,11 +21,12 @@ const savemessage=async (req,res)=>{
             })
             .then(data=>{
                 data.setGroup(group)
-                t.commit()
+                
             })
         }
-    })
+    
 }catch(err){
+    console.log(err)
     res.send("some error occured")
 
     }

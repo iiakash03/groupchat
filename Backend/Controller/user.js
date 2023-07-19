@@ -1,7 +1,7 @@
 const User=require('../Models/user')
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
-const { Sequelize } = require('sequelize')
+const Sequelize=require('../util/database');
 
 
 const register=async (req,res)=>{

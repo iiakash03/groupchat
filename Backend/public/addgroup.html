@@ -21,7 +21,7 @@
 
     <script>
         window.addEventListener('DOMContentLoaded',()=>{
-            axios.get('http://3.21.159.235:3000/user/getUsers')
+            axios.get('http://localhost:3000/user/getUsers')
             .then(result=>{
                 showUsers(result.data)
             })
@@ -51,10 +51,10 @@
             let values=Array.from(users).map(({value})=>value)
             console.log(values)
 
-            axios.post('http://3.21.159.235:3000/group/addgroup',{gn,values},{headers:{Authorization:token}})
+            axios.post('http://localhost:3000/group/addgroup',{gn,values},{headers:{Authorization:token}})
             .then(res=>{
                 console.log(res,"gvhygy")
-                window.location.href="../homepage.html"
+                window.location.href="homepage.html"
             })
         }
     </script>

@@ -4,6 +4,7 @@ const Sequelize=require('./Backend/util/database');
 const bodyParser=require('body-parser')
 const cors=require('cors');
 const http = require('http');
+require('dotenv').config()
 
 
 const server = http.createServer(app);
@@ -14,6 +15,8 @@ const io = new Server(server,{
     }
 });
 
+console.log("snwjnejknc")
+
 io.on('connection',socket=>{
     console.log(socket.id)
     socket.on('send-message',(message,groupid)=>{
@@ -23,6 +26,7 @@ io.on('connection',socket=>{
             socket.emit('recieve-message',message)
 
         }else{
+            console.log(typeof(groupid))
             socket.to(groupid).emit('recieve-message',message)
         }
     })
@@ -30,6 +34,8 @@ io.on('connection',socket=>{
         socket.join(room)
     })
 })
+
+console.log("snwjnejknc")
 
 const User=require('./Backend/Models/user');
 const Message=require('./Backend/Models/message');
@@ -40,11 +46,14 @@ const userRoutes=require('./Backend/Routes/user')
 const messageRoutes=require('./Backend/Routes/message')
 const groupRoutes=require('./Backend/Routes/group')
 
+console.log("snwjnejknc")
+
 app.use(
     cors({
         origin:"http://127.0.0.1:5500",
 }));
 
+console.log("snwjnejknc")
 
 
 app.use(bodyParser.urlencoded({extended:false}))
@@ -56,9 +65,13 @@ app.use('/message',messageRoutes)
 
 app.use('/group',groupRoutes)
 
+console.log("snwjnejknc")
+
 app.use((req,res)=>{
     res.sendFile(path.join(__dirname, `Backend/public/${req.url}`))
 })
+
+console.log("snwjnejknc")
 
 User.hasMany(Message)
 Message.belongsTo(User)
@@ -68,6 +81,8 @@ Message.belongsTo(Group)
 
 Group.belongsToMany(User,{through:user_group})
 User.belongsToMany(Group,{through:user_group})
+
+console.log("snwjnejknc")
 
 Sequelize
 .sync()
