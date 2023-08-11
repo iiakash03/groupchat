@@ -21,7 +21,7 @@
 
     <script>
         window.addEventListener('DOMContentLoaded',()=>{
-            axios.get('http://localhost:3000/user/getUsers')
+            axios.get(process.env.PORT+'/user/getUsers')
             .then(result=>{
                 showUsers(result.data)
             })
@@ -51,7 +51,7 @@
             let values=Array.from(users).map(({value})=>value)
             console.log(values)
 
-            axios.post('http://localhost:3000/group/addgroup',{gn,values},{headers:{Authorization:token}})
+            axios.post(process.env.PORT+'/group/addgroup',{gn,values},{headers:{Authorization:token}})
             .then(res=>{
                 console.log(res,"gvhygy")
                 window.location.href="homepage.html"
